@@ -7,27 +7,31 @@ public class WeatherData{
 
     private String place;
     private LocalDateTime timestamp;
-    private float longitude;
-    private float latitude;
+    private Double longitude;
+    private Double latitude;
     private int[] temperature;
     private int[] rain;
 
-    public WeatherData(float longitude, float latitude, int[] temperature, int[] rain, String place) {
+    public WeatherData(Double longitude, Double latitude, int[] temperature, int[] rain, String place) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.temperature = temperature;
         this.rain = rain;
-        this.place = this.place;
+        this.place = place;
         this.timestamp = LocalDateTime.now();
     }
 
 
+
+
+
+
     //region Getter
-    public float getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public float getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 

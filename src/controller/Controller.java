@@ -13,16 +13,23 @@
  */
 
 package controller;
+import dao.SimulationDAO;
+import dao.WeatherDAO;
+import model.WeatherData;
 import view.MainView;
 
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class Controller {
 
     MainView view;
+    WeatherDAO weatherDB;
 
     public Controller( MainView view) {
         this.view = view;
+        this.weatherDB = new SimulationDAO();
+
         view.addGetDataButtonHandler(this::getWeatherData);
         view.addSaveCsvButtonHandler(this::saveAsCsv);
         view.addLoadCsvButtonHandler(this::loadAsCsv);
@@ -42,7 +49,11 @@ public class Controller {
     private void getWeatherData(ActionEvent event){
         System.out.println("Get Weather Data");
 
-
+        var coords = view.getCurrentCoords();
+        WeatherData data = weatherDB.getWeatherData(coords[0], coords[1]);
+        System.out.println("Ort:" + data.getPlace()+" Values T: "+
+                Arrays.toString(data.getTemperature())+
+                " Values R: "+ Arrays.toString(data.getRain()));
 
     }
 

@@ -96,6 +96,24 @@ public class MainView extends JFrame {
         return data;
     }
 
+    /**
+     * Holt die eingegebenen Koordinaten von den Textfeldern
+     * @return Double[] Koordinaten
+     */
+    public Double[] getCurrentCoords(){
+        Double longitude = 0d;
+        Double latitude = 0d;
+        try {
+            longitude = Double.parseDouble(longText.getText());
+            latitude = Double.parseDouble(latText.getText());
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+
+        return new Double[]{longitude, latitude};
+    }
+
 
     //region Button Handler
     /**
