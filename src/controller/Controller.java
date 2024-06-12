@@ -51,9 +51,9 @@ public class Controller {
 
         var coords = view.getCurrentCoords();
         WeatherData data = weatherDB.getWeatherData(coords[0], coords[1]);
-        System.out.println("Ort:" + data.getPlace()+" Values T: "+
-                Arrays.toString(data.getTemperature())+
-                " Values R: "+ Arrays.toString(data.getRain()));
+
+        view.updateWeatherData( data.getTemperature(), data.getRain() );
+
 
     }
 

@@ -21,11 +21,6 @@ public class WeatherData{
         this.timestamp = LocalDateTime.now();
     }
 
-
-
-
-
-
     //region Getter
     public Double getLongitude() {
         return longitude;

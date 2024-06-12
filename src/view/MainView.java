@@ -114,6 +114,36 @@ public class MainView extends JFrame {
         return new Double[]{longitude, latitude};
     }
 
+    /**
+     * Aktualisiert die Tabelle mit den Wetterdaten
+     * @param temperature
+     * @param rain
+     */
+    public void updateWeatherData(int[] temperature, int[] rain){
+
+        for (int i = 0; i < temperature.length; i++) {
+            weatherTable.getModel().setValueAt( temperature[i], i, 1 );
+        }
+
+        for (int j = 0; j < temperature.length; j++) {
+            weatherTable.getModel().setValueAt( rain[j], j, 2 );
+        }
+    }
+
+    /**
+     * Holt die aktuellen Wetterdaten aus der Tabelle
+     * @return Tabellendaten
+     */
+    public Object[][] getTableData () {
+        int nRow = tableModel.getRowCount(), nCol = tableModel.getColumnCount();
+        Object[][] tableData = new Object[nRow][nCol];
+
+        for (int i = 0 ; i < nRow ; i++)
+            for (int j = 0 ; j < nCol ; j++)
+                tableData[i][j] = tableModel.getValueAt(i,j);
+
+        return tableData;
+    }
 
     //region Button Handler
     /**
