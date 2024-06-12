@@ -13,6 +13,7 @@
  */
 
 package controller;
+import dao.CsvDAO;
 import dao.SimulationDAO;
 import dao.WeatherDAO;
 import model.WeatherData;
@@ -22,9 +23,9 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 public class Controller {
-
     MainView view;
     WeatherDAO weatherDB;
+    CsvDAO weatherFile;
 
     public Controller( MainView view) {
         this.view = view;
@@ -33,14 +34,13 @@ public class Controller {
         view.addGetDataButtonHandler(this::getWeatherData);
         view.addSaveCsvButtonHandler(this::saveAsCsv);
         view.addLoadCsvButtonHandler(this::loadAsCsv);
-
     }
 
     public static void main(String[] args) {
         new Controller( new MainView() );
     }
 
-    //region Get Weather Data
+    //region Get/Load Weather Data
 
     /**
      * Wetterdaten anfordern ausgelöst durch den Event des "Wetterdaten holen" - Button
@@ -53,8 +53,6 @@ public class Controller {
         WeatherData data = weatherDB.getWeatherData(coords[0], coords[1]);
 
         view.updateWeatherData( data.getTemperature(), data.getRain() );
-
-
     }
 
     /**
@@ -72,7 +70,7 @@ public class Controller {
 
     //region Save Weather Data
     /**
-     * Wetterdaten anfordern ausgelöst durch den Event des "Speichern CSV" - Button
+     * Wetterdaten als CSV File speichern, ausgelöst durch den Event des "Speichern CSV" - Button
      * @param event
      */
     private void saveAsCsv(ActionEvent event){

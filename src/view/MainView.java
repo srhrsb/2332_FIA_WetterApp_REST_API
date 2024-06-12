@@ -103,6 +103,7 @@ public class MainView extends JFrame {
     public Double[] getCurrentCoords(){
         Double longitude = 0d;
         Double latitude = 0d;
+
         try {
             longitude = Double.parseDouble(longText.getText());
             latitude = Double.parseDouble(latText.getText());
