@@ -62,7 +62,7 @@ public class Controller {
     private void loadAsCsv(ActionEvent event){
         System.out.println("Load Weather Data from CSV");
 
-
+        //Daten laden und in der Tabelle darstellen
 
     }
 
@@ -76,7 +76,7 @@ public class Controller {
     private void saveAsCsv(ActionEvent event){
         System.out.println("Save Weather Data as CSV");
 
-
+        //Tabelleninhalt als CSV Datei speichern
 
     }
     //endregion

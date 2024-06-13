@@ -5,11 +5,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MainView extends JFrame {
 
     private JTextField longText, latText, placeTf, timeStampTf;
     private JButton getButton, saveCSVButton, loadCSVButton;
+    private final JFileChooser fileChooser = new JFileChooser();
 
     //table
     private JTable weatherTable;
@@ -144,6 +146,18 @@ public class MainView extends JFrame {
                 tableData[i][j] = tableModel.getValueAt(i,j);
 
         return tableData;
+    }
+
+    public String getCSVSavePath(){
+        int success = fileChooser.showSaveDialog(this);
+        String path = "";
+
+        if(success == JFileChooser.APPROVE_OPTION){
+            File file = fileChooser.getSelectedFile();
+            path = file.getPath();
+        }
+
+        return path;
     }
 
     //region Button Handler
