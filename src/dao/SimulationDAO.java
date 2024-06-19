@@ -13,48 +13,81 @@ public class SimulationDAO implements WeatherDAO {
         locations = getSimulatedPlaces();
     }
 
+    /**
+     * Simulierte Wetterdaten anfordern
+     * @param longitude
+     * @param latitude
+     * @return
+     */
     @Override
     public WeatherData getWeatherData( Double longitude, Double latitude){
 
         String place = getPlaceByCoords(longitude, latitude);
 
-        int[] temperature = getSimulatedTemperatureValues();
-        int[] rain = getSimulatedRainValues();
+       Double[] temperature = getSimulatedTemperatureValues();
+       Double[] rain = getSimulatedRainValues();
 
         WeatherData data = new WeatherData(longitude, latitude, temperature, rain, place);
         return data ;
     }
 
-    private int[] getSimulatedTemperatureValues(){
-        int[] temperatures = new int[24];
+    /**
+     * Simulierte Temperaturdaten für 24h erzeugen
+     * @return Double[] temperaturen
+     */
+    private Double[] getSimulatedTemperatureValues(){
+        Double[] temperatures = new Double[24];
         Random random = new Random();
 
-        int tValue = random.nextInt(30) - 10;
+        Double tValue = random.nextDouble(30) - 10;
 
 
         for (int i = 0; i < temperatures.length; i++) {
             temperatures[i] = tValue;
 
             if( i< 15)
-                tValue+= random.nextInt(3);
+                tValue+= random.nextDouble(3);
             else
-                tValue--;
+                tValue-=random.nextDouble(3);;
         }
 
         return temperatures;
     }
 
-    private int[] getSimulatedRainValues(){
-        int[] rain = new int[24];
+    /**
+     * Simulierte Niederschlagshöhe für 24h erzeugen
+     * @return Double[] temperaturen
+     */
+    private Double[] getSimulatedRainValues(){
+        Double[] rain = new Double[24];
         Random random = new Random();
 
-        for (int i = 0; i < rain.length; i++) {
-            rain[i] = random.nextInt(100);
+        int chance = random.nextInt(4);
+        if(chance > 2){
+            //schweres Regenwetter
+            for (int i = 0; i < rain.length; i++) {
+                rain[i] = random.nextDouble(25);
+            }
+        }
+        else if(chance>1)
+            //leichtes Regenwetter
+            for (int i = 0; i < rain.length; i++) {
+                rain[i] = random.nextDouble(5);
+        }
+        else{
+            //kein Regenwetter
+            Arrays.fill(rain, 0d);
         }
 
         return rain;
     }
 
+    /**
+     * Gibt Ortsname anhand der Koordinaten zurück
+     * @param longitude
+     * @param latitude
+     * @return
+     */
     private String getPlaceByCoords(Double longitude, Double latitude){
         Double[] coords = new Double[]{longitude, latitude};
 
@@ -65,6 +98,10 @@ public class SimulationDAO implements WeatherDAO {
             return place;
     }
 
+    /**
+     * Erstellt Map mit Koordinaten und zugeordneten Ortsnamen für Simulationszwecke
+     * @return Map< Double[], String>
+     */
     private Map<Double[], String> getSimulatedPlaces(){
         Map< Double[], String> locations = new HashMap<>();
         locations.put(new Double[]{52.5200, 13.4050},"Berlin");

@@ -9,16 +9,25 @@ public class WeatherData{
     private LocalDateTime timestamp;
     private Double longitude;
     private Double latitude;
-    private int[] temperature;
-    private int[] rain;
+    private Double[] temperature;
+    private Double[] rain;
 
-    public WeatherData(Double longitude, Double latitude, int[] temperature, int[] rain, String place) {
+    public WeatherData(Double longitude, Double latitude, Double[] temperature, Double[] rain, String place) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.temperature = temperature;
         this.rain = rain;
         this.place = place;
         this.timestamp = LocalDateTime.now();
+    }
+
+    public WeatherData(Double longitude, Double latitude, Double[] temperature, Double[] rain, String place, LocalDateTime timestamp) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.temperature = temperature;
+        this.rain = rain;
+        this.place = place;
+        this.timestamp = timestamp;
     }
 
     //region Getter
@@ -30,11 +39,11 @@ public class WeatherData{
         return latitude;
     }
 
-    public int[] getTemperature() {
+    public Double[] getTemperature() {
         return temperature;
     }
 
-    public int[] getRain() {
+    public Double[] getRain() {
         return rain;
     }
 

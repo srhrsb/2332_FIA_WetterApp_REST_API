@@ -2,16 +2,20 @@ package view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 
 public class MainView extends JFrame {
 
     private JTextField longText, latText, placeTf, timeStampTf;
     private JButton getButton, saveCSVButton, loadCSVButton;
     private final JFileChooser fileChooser = new JFileChooser();
+    private final DecimalFormat formatter = new DecimalFormat("#.##");
 
     //table
     private JTable weatherTable;
@@ -21,10 +25,13 @@ public class MainView extends JFrame {
 
     public MainView() {
         setSize(500,600);
-         setTitle("Koordinaten Wetter");
-         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-         addUI();
-         setVisible(true);
+        setTitle("Koordinaten Wetter");
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileFilter(
+                new FileNameExtensionFilter("CSV - Dateien", "csv"));
+        addUI();
+        setVisible(true);
     }
 
     /**
@@ -77,7 +84,7 @@ public class MainView extends JFrame {
         saveCSVButton = new JButton("Speichern (CSV)");
         saveCSVButton.setEnabled(false);
         loadCSVButton = new JButton("Laden (CSV)");
-        loadCSVButton.setEnabled(false);
+
 
         bottomPanel.add(getButton);
         bottomPanel.add(loadCSVButton);
@@ -86,7 +93,7 @@ public class MainView extends JFrame {
 
     /**
      * Erstellt die Daten der Tabelle für den Start
-     * @return - Daten
+     * @return Object[][] Daten
      */
     private Object[][] getDefaultValues(){
         Object[][] data = new String[24][3];
@@ -105,7 +112,6 @@ public class MainView extends JFrame {
     public Double[] getCurrentCoords(){
         Double longitude = 0d;
         Double latitude = 0d;
-
         try {
             longitude = Double.parseDouble(longText.getText());
             latitude = Double.parseDouble(latText.getText());
@@ -118,24 +124,51 @@ public class MainView extends JFrame {
     }
 
     /**
-     * Aktualisiert die Tabelle mit den Wetterdaten
-     * @param temperature
-     * @param rain
+     * Gibt die Eingabe des Textfeldes Timestamp zurück
+     * @return String Zeitstempel
      */
-    public void updateWeatherData(int[] temperature, int[] rain){
-
-        for (int i = 0; i < temperature.length; i++) {
-            weatherTable.getModel().setValueAt( temperature[i], i, 1 );
-        }
-
-        for (int j = 0; j < temperature.length; j++) {
-            weatherTable.getModel().setValueAt( rain[j], j, 2 );
-        }
+    public String getTimeStamp(){
+        return timeStampTf.getText();
     }
 
     /**
-     * Holt die aktuellen Wetterdaten aus der Tabelle
-     * @return Tabellendaten
+     * Gibt den eingegeben Ortsnamen zurück
+     * @return String Ortsname
+     */
+    public String getPlace(){
+        return placeTf.getText();
+    }
+
+    /**
+     * Aktualisiert die Tabelle mit neuen Wetterdaten
+     * @param timeStamp Zeitstempel
+     * @param place Ortsname
+     * @param longitude Longitude
+     * @param latitude Latitude
+     * @param temperature Double[] Temperaturen 24h
+     * @param rain Double[] Niederschlag 24h
+     */
+    public void updateWeatherData(LocalDateTime timeStamp, String place, Double longitude, Double latitude, Double[] temperature, Double[] rain){
+        for (int i = 0; i < temperature.length; i++) {
+            weatherTable.getModel().setValueAt( formatter.format(temperature[i]), i, 1 );
+        }
+
+        for (int j = 0; j < rain.length; j++) {
+            weatherTable.getModel().setValueAt( formatter.format(rain[j]), j, 2 );
+        }
+
+        String timeString = timeStamp.toString();
+        timeStampTf.setText(timeString);
+        placeTf.setText(place);
+        longText.setText(String.valueOf(longitude));
+        latText.setText(String.valueOf(latitude));
+
+        saveCSVButton.setEnabled(true);
+    }
+
+    /**
+     * Gibt die aktuell eingetragenen Wetterdaten zurück
+     * @return Object[][] Tabellendaten
      */
     public Object[][] getTableData () {
         int nRow = tableModel.getRowCount(), nCol = tableModel.getColumnCount();
@@ -148,6 +181,10 @@ public class MainView extends JFrame {
         return tableData;
     }
 
+    /**
+     * Öffnet Dateidialog zum Speichern und gibt eingegebenen bzw. gewählten Filenamen/Pfad zurück
+     * @return String Dateipfad
+     */
     public String getCSVSavePath(){
         int success = fileChooser.showSaveDialog(this);
         String path = "";
@@ -159,6 +196,53 @@ public class MainView extends JFrame {
 
         return path;
     }
+
+    /**
+     * Öffnet Dateidialog zum Laden und gibt eingegebenen bzw. gewählten Filenamen/Pfad zurück
+     * @return String Dateipfad
+     */
+    public String getCSVLoadFile(){
+        int success = fileChooser.showOpenDialog(this);
+        String path = "";
+
+        if(success == JFileChooser.APPROVE_OPTION){
+            File file = fileChooser.getSelectedFile();
+            path = file.getPath();
+        }
+
+        return path;
+    }
+
+    //region Messages
+
+    /**
+     * Zeigt Infofenster an
+     * @param message Infotext
+     */
+    public void showInfoMessage(String message) {
+        JOptionPane.showMessageDialog(this, message,
+                "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Zeigt Fehlerfenster an
+     * @param message Infotext
+     */
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message,
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Zeigt Zustimmungsfenster an
+     * @param message Infotext
+     */
+    public boolean confirmDialog(String message) {
+        return JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this,
+                message, "Frage", JOptionPane.YES_NO_OPTION);
+    }
+    //endregion
+
 
     //region Button Handler
     /**
@@ -177,7 +261,7 @@ public class MainView extends JFrame {
         saveCSVButton.addActionListener( listener );
     }
 
-     /* Fügt dem Laden-Button den Eventlistener hinzu für onclick
+    /* Fügt dem Laden-Button den Eventlistener hinzu für onclick
      * @param listener
      */
     public void addLoadCsvButtonHandler(ActionListener listener){
