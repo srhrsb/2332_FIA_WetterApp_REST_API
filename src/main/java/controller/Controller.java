@@ -14,6 +14,7 @@
 
 package controller;
 import dao.CsvDAO;
+import dao.RestApiDAO;
 import dao.SimulationDAO;
 import dao.WeatherDAO;
 import model.WeatherData;
@@ -29,7 +30,7 @@ public class Controller {
 
     public Controller( MainView view) {
         this.view = view;
-        this.weatherDB = new SimulationDAO();
+        this.weatherDB = new RestApiDAO();
         this.weatherFiles = new CsvDAO();
 
         view.addGetDataButtonHandler(this::getWeatherData);
