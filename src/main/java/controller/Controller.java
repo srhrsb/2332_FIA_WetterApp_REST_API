@@ -53,9 +53,15 @@ public class Controller {
         System.out.println("Get Weather Data");
 
         var coords = view.getCurrentCoords();
-        WeatherData data = weatherDB.getWeatherData(coords[0], coords[1]);
+        weatherDB.getWeatherData(coords[0], coords[1], this::handleWeatherData);
+    }
+
+    private void handleWeatherData(WeatherData data){
         view.updateWeatherData( data.getTimestamp(), data.getPlace(), data.getLongitude(), data.getLatitude(), data.getTemperature(), data.getRain() );
     }
+
+
+
 
     /**
      * Wetterdaten anfordern (ausgelöst durch den Event des "Laden CSV" - Button)

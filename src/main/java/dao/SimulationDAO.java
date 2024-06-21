@@ -3,6 +3,7 @@ package dao;
 import model.WeatherData;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SimulationDAO implements WeatherDAO {
 
@@ -20,7 +21,7 @@ public class SimulationDAO implements WeatherDAO {
      * @return
      */
     @Override
-    public WeatherData getWeatherData( Double longitude, Double latitude){
+    public void getWeatherData(Double longitude, Double latitude, Consumer<WeatherData> onSuccessCallback){
 
         String place = getPlaceByCoords(longitude, latitude);
 
@@ -28,7 +29,7 @@ public class SimulationDAO implements WeatherDAO {
        Double[] rain = getSimulatedRainValues();
 
         WeatherData data = new WeatherData(longitude, latitude, temperature, rain, place);
-        return data ;
+        onSuccessCallback.accept(data);
     }
 
     /**

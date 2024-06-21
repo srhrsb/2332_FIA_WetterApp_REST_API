@@ -2,9 +2,11 @@ package dao;
 
 import model.WeatherData;
 
+import java.util.function.Consumer;
+
 public interface WeatherDAO {
 
-    WeatherData getWeatherData( Double longitude, Double latitude );
+    void getWeatherData(Double longitude, Double latitude, Consumer<WeatherData> onSuccessDAO);
 
 
 
